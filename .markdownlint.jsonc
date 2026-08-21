@@ -1,0 +1,7 @@
+{
+  "default": true,
+  // Long-form technical prose naturally exceeds a fixed line length.
+  "MD013": false,
+  // Section headings (e.g. "Źródła") repeat by design across sibling docs.
+  "MD024": { "siblings_only": true }
+}
