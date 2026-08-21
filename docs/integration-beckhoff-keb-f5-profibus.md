@@ -8,7 +8,7 @@ sterującej napędami pomp lub nadążników.
 
 ## 1. Architektura
 
-```
+```text
 Beckhoff CX/CP (TwinCAT PLC)
         │  EtherCAT
         ▼
@@ -101,7 +101,7 @@ F5 „Status and Control Word”** (istnieją różnice zależne od wersji
 oprogramowania i wybranego trybu telegramu):
 
 | Bit | Nazwa (typowo) | Znaczenie |
-|---|---|---|
+| --- | --- | --- |
 | 0 | ON / OFF1 | 1 = załącz (start), 0 = zatrzymanie po rampie (OFF1) |
 | 1 | OFF2 | 0 = zatrzymanie swobodnym wybiegiem (coast stop) |
 | 2 | OFF3 | 0 = szybkie zatrzymanie (quick stop) |
@@ -169,7 +169,7 @@ zasilanym z fotowoltaiki lub siłowniki/napędy nadążników (trackerów):
 ## 8. Typowe problemy
 
 | Objaw | Prawdopodobna przyczyna |
-|---|---|
+| --- | --- |
 | Slave nie pojawia się w konfiguracji TwinCAT | brak/zły plik GSD, niezgodna wersja GSD z wersją firmware modułu Operator |
 | Bus fault / ciągłe restarty komunikacji | brak terminacji lub podwójna terminacja, uszkodzony kabel/ekranowanie, konflikt adresów |
 | Falownik nie reaguje na polecenia (control word) | brak bitu „control by PLC”/zezwolenia, nieaktywne „operation enable”, niezgodny układ bitów z założeniami |

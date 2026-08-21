@@ -18,7 +18,7 @@ jednak oferuje pełne wsparcie dla integracji PROFIBUS DP jako:
 ## 2. Kluczowe produkty sprzętowe
 
 | Produkt | Typ | Rola | Uwagi |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **EL6731** | Terminal EtherCAT (IP20) | Master **lub** Slave PROFIBUS (wybór programowy) | Obsługuje PROFIBUS DP, DPV1, DPV2 oraz protokół PROFIdrive-PKW; szybkość transmisji do 12 Mbit/s (DP) |
 | **EL6731-0010** | Terminal EtherCAT (IP20) | Wyłącznie Slave PROFIBUS | Wariant „tylko slave” tego samego terminala |
 | **FC310x** | Karta PCI/PCIe | Master PROFIBUS dla PC-based Control | Dodatkowo obsługuje S5-FDL (AG-AG) — starszy protokół Siemens |
