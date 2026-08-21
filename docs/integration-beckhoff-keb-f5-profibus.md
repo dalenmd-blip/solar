@@ -175,6 +175,44 @@ zasilanym z fotowoltaiki lub siłowniki/napędy nadążników (trackerów):
 | Falownik nie reaguje na polecenia (control word) | brak bitu „control by PLC”/zezwolenia, nieaktywne „operation enable”, niezgodny układ bitów z założeniami |
 | Wartości procesowe „poszatkowane”/nielogiczne | zła konfiguracja rozmiaru telegramu PZD (np. założono 16 B, a skonfigurowano jedno PDO 8 B) |
 | Komunikacja działa, ale zmiana parametru (CP1 itd.) nie działa | błędny PNU/offset w kanale PKW — zweryfikować numerację względem `XX80h` |
+| Pojedyncze, powtarzalne błędy `physical Bus-Error` zawsze na tym samym numerze slave'a, pojawiające się w seriach po dłuższym czasie bezawaryjnej pracy (np. „kilka godzin czysto, potem kilka błędów w ciągu godziny”) | problem zlokalizowany fizycznie przy **tym jednym węźle**, nie na całym segmencie — patrz rozdział 8a niżej |
+
+### 8a. Studium przypadku: powtarzalny `physical Bus-Error` na jednym slave'ie
+
+Zaobserwowany w praktyce wzorzec: master (Beckhoff FC310x) loguje
+`Telegram has a physical Bus-Error (Slave N)`, po czym w ciągu
+kilkunastu–kilkudziesięciu milisekund ta sama stacja samoczynnie wraca do
+`data exchange mode`. Błąd dotyczy **zawsze tego samego numeru slave'a**
+(nie losowych stacji), a w danym przypadku była to stacja **BK3120**
+(Beckhoff Bus Coupler PROFIBUS DP zbierający terminale KL — patrz
+[`beckhoff-bk3120.md`](./beckhoff-bk3120.md)), a nie sam falownik F5.
+
+Kluczowe wnioski diagnostyczne z takiego wzorca:
+
+- **Zawsze ten sam slave, nie losowe stacje** → problem lokalny (kabel,
+  złącze, terminacja, zasilanie tego konkretnego węzła), nie problem
+  współdzielony (magistrala główna, karta mastera, ogólny szum na
+  segmencie). Gdyby padały różne/losowe stacje w każdej serii, wskazywałoby
+  to na przyczynę wspólną dla całego segmentu.
+- **Wzorzec czasowy „czysto godzinami, potem seria błędów”** wyklucza
+  twardy, stały defekt (dawałby błędy od razu i stale) i wskazuje na
+  przyczynę zależną od narastającego/zmiennego warunku — najczęściej:
+  - cykl termiczny (nagrzewanie obudowy/złącza w ciągu dnia, zwłaszcza przy
+    urządzeniach zamontowanych bliżej punktów polowych niż szafa główna),
+  - obciążenie/EMI zależne od pracy pobliskiego napędu (więcej zakłóceń
+    przy wyższym prądzie silnika — np. w środku dnia przy większym
+    nasłonecznieniu i wyższej prędkości pompy),
+  - niestabilne lokalne zasilanie 24 VDC tego węzła (współdzielone z czymś
+    powodującym zapady napięcia, np. cewki styczników).
+- **Test różnicujący**: zamiana miejsca w łańcuchu magistrali (czy błąd
+  zostaje przy tym samym punkcie fizycznym, czy wędruje z urządzeniem) albo
+  podmiana samego urządzenia/couplera pozwala jednoznacznie rozstrzygnąć,
+  czy problem tkwi w instalacji (kabel/złącze/terminacja/zasilanie w danym
+  miejscu) czy w samym urządzeniu.
+
+Szczegółowa lista kontrolna specyficzna dla BK3120 (adresacja, terminacja,
+zasilanie, diagnostyka DPV1) — patrz
+[`beckhoff-bk3120.md`](./beckhoff-bk3120.md#4-typowe-przyczyny-powtarzalnych-zlokalizowanych-błędów-profibus-na-bk3120).
 
 ## Źródła
 
