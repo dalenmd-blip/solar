@@ -210,6 +210,45 @@ Kluczowe wnioski diagnostyczne z takiego wzorca:
   czy problem tkwi w instalacji (kabel/złącze/terminacja/zasilanie w danym
   miejscu) czy w samym urządzeniu.
 
+#### Uwaga: stały odstęp czasowy do odzyskania komunikacji NIE mierzy czasu trwania usterki
+
+W obserwowanym przypadku odstęp między wpisem `physical Bus-Error` a
+powrotem do `data exchange mode` wynosił za każdym razem ok. **20 ms** —
+zaskakująco stała wartość, mogąca sugerować, że przyczyna też jest „stała”
+(np. elektroniczna), a nie mechaniczna/przypadkowa (ruch kabla, mikroprzerwa
+styku), po której intuicyjnie spodziewano by się przerw o zmiennej długości.
+
+**To rozumowanie jest błędne**, bo PROFIBUS DP jest protokołem cyklicznym o
+deterministycznym czasie taktu. Master odpytuje wszystkie stacje po kolei w
+ramach stałego **cyklu magistrali (bus cycle / target rotation time)**.
+Gdy pojedynczy telegram do danej stacji się nie powiedzie — niezależnie od
+tego, czy fizyczna przyczyna trwała 1 μs czy kilka ms — master oznacza
+stację jako chwilowo nieaktywną i ponawia próbę **dopiero przy następnym
+okrążeniu cyklu**. Czas do powrotu `data exchange mode` to więc w praktyce
+**czas jednego cyklu magistrali**, a nie rzeczywisty czas trwania
+zakłócenia fizycznego. Cykl magistrali dla danej liczby stacji i baudrate
+jest wielkością stałą, więc będzie niemal identyczny przy każdym
+wystąpieniu — **to spodziewane zachowanie protokołu, nie dowód na
+elektroniczną/nie-mechaniczną przyczynę usterki**.
+
+Jednorazowe, bardzo krótkie zaburzenie fizyczne (drgnięcie kabla,
+mikroprzerwa styku, impuls EMI) w zupełności wystarczy, by zgubić jeden
+telegram — a czas odzysku i tak będzie zawsze zbliżony do czasu cyklu.
+
+**Jak zweryfikować:** sprawdź skonfigurowany czas cyklu magistrali (Target
+Rotation Time) mastera FC310x w TwinCAT — jeśli dla danej liczby stacji
+wynosi ok. tyle samo, ile obserwowany odstęp (w tym przypadku ~20 ms),
+potwierdza to, że wartość jest artefaktem protokołu, nie miarą usterki.
+Rzeczywisty czas trwania samego zaburzenia elektrycznego można zmierzyć
+tylko analizatorem magistrali PROFIBUS podłączonym fizycznie do segmentu
+(np. ProfiTrace, Procentec Atlas) — logi TwinCAT/FC310x pokazują wyłącznie
+skutek (nieudany telegram), nie przebieg sygnału.
+
+**Wniosek:** stały odstęp czasowy między błędem a odzyskaniem komunikacji
+nie potwierdza ani nie wyklucza żadnej z przyczyn fizycznych wymienionych
+wyżej (termika, EMI, zasilanie, terminacja) — nie należy go traktować jako
+argumentu przeciwko przyczynie mechanicznej/przypadkowej.
+
 Szczegółowa lista kontrolna specyficzna dla BK3120 (adresacja, terminacja,
 zasilanie, diagnostyka DPV1) — patrz
 [`beckhoff-bk3120.md`](./beckhoff-bk3120.md#4-typowe-przyczyny-powtarzalnych-zlokalizowanych-błędów-profibus-na-bk3120).
