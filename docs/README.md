@@ -18,7 +18,12 @@ zasilanymi z PV).
    przewodnik integracji: Beckhoff jako master PROFIBUS DP + KEB F5 (moduł
    PROFIBUS-DP Operator 00.F5.060-3000) jako slave — warstwa fizyczna,
    uruchomienie, model wymiany danych (PKW/PZD), słowo sterujące/statusowe,
-   typowy scenariusz dla aplikacji solarnej, checklisty i troubleshooting.
+   typowy scenariusz dla aplikacji solarnej, checklisty i troubleshooting
+   (w tym studium przypadku powtarzalnego `physical Bus-Error`).
+4. [`beckhoff-bk3120.md`](./beckhoff-bk3120.md) — Bus Coupler BK3120
+   (Beckhoff, PROFIBUS DP ↔ K-bus): budowa, dane techniczne, adresacja,
+   diagnostyka LED/DPV1 oraz przyczyny powtarzalnych, zlokalizowanych
+   błędów PROFIBUS na pojedynczym couplerze.
 
 ## Uwaga metodologiczna
 
