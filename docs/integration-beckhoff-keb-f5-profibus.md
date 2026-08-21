@@ -249,6 +249,29 @@ nie potwierdza ani nie wyklucza żadnej z przyczyn fizycznych wymienionych
 wyżej (termika, EMI, zasilanie, terminacja) — nie należy go traktować jako
 argumentu przeciwko przyczynie mechanicznej/przypadkowej.
 
+**Co jednak MOŻNA wywnioskować:** obserwowany odstęp jest poprawną **górną
+granicą** czasu trwania samej usterki fizycznej. Skoro kolejna próba
+odpytania tej samej stacji (następny cykl, ~20 ms później) już się
+powiodła, to zaburzenie musiało ustąpić, zanim do niej doszło — inaczej
+zobaczylibyśmy kolejny błąd z rzędu, a nie natychmiastowy powrót do
+`data exchange mode`. Można więc stwierdzić, że **usterka trwała krócej niż
+jeden cykl magistrali (w tym przypadku < ~20 ms)**.
+
+To jednak wyłącznie górna granica, nie dokładna wartość — z samego logu nie
+da się ustalić, czy rzeczywiście trwała 15 ms, czy raczej pojedyncze
+mikrosekundy (jeden zniekształcony bit w telegramie już wystarczy, by
+master zgłosił błąd całej ramki); do tego potrzebny byłby analizator
+magistrali. Ta granica nie zawęża też **mechanizmu przyczyny** — mikroprzerwa
+styku, impuls EMI czy chwilowe zaburzenie sygnału przy termicznym
+rozszerzaniu złącza typowo trwają rzędu mikro- do pojedynczych milisekund,
+więc wszystkie mieszczą się z dużym zapasem poniżej jednego cyklu.
+
+Dodatkowa, przydatna obserwacja: skoro to zawsze **pojedynczy** nieudany
+cykl (nie 2–3 błędy z rzędu), usterka jest bardzo krótkotrwała — spójne z
+klasycznym, migawkowym zaburzeniem fizycznym, a niespójne z czymś, co
+blokowałoby łącze na dłużej (np. realnym przerwaniem ciągłości kabla, które
+dawałoby serię błędów pod rząd aż do fizycznej naprawy).
+
 Szczegółowa lista kontrolna specyficzna dla BK3120 (adresacja, terminacja,
 zasilanie, diagnostyka DPV1) — patrz
 [`beckhoff-bk3120.md`](./beckhoff-bk3120.md#4-typowe-przyczyny-powtarzalnych-zlokalizowanych-błędów-profibus-na-bk3120).
